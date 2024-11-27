@@ -1,0 +1,36 @@
+<?php
+$conn= mysqli_connect("localhost","root","","sem3");
+if(!$conn){
+echo "Failed" .mysqli_connect_error();
+}
+{
+if(isset($_POST['login']))
+$email = $_POST['email'];
+$password = $_POST['password'];
+// $result = mysqli_query($conn,"SELECT * FROM `studentgroups` WHERE
+`student_email`= '$email'AND `student_password`='$password'");
+$stmt = $conn->prepare("SELECT * FROM `studentgroups` WHERE `student_email` = ?
+AND `student_password` = ?");
+$stmt->bind_param("ss", $email, $password);
+$stmt->execute();
+$result = $stmt->get_result();
+if ($result->num_rows > 0)
+{
+session_start();
+$_SESSION['UserID']=$_POST['email'];
+echo "Login successful!";
+}
+else
+{
+echo "Invalid username or password.";
+}
+}
+?>
+<form action="" method="POST" id="login" autocomplete="oﬀ">
+<input type="text" placeholder="Enter your email" name="email" required
+autocomplete="oﬀ">
+<input type="password" placeholder="Enter your password" name="password"
+required autocomplete="oﬀ">
+<input type="submit" value="Sumbit" name="login">
+</form>
+<h7><?php echo $_SESSION['UserID']?> </h7>
